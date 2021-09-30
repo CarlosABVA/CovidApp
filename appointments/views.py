@@ -26,16 +26,6 @@ class AppointmentCreation(generics.CreateAPIView):
     """
     serializer_class = AppointmentSerializer
 
-    def perform_create(self, serializer):
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'success': True})
-        else:
-            return Response(
-                serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
 
 class AppointmentList(generics.ListAPIView):
     """
