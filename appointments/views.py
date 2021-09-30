@@ -2,7 +2,6 @@ from rest_framework import generics, permissions, filters
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from django.shortcuts import get_object_or_404
 
 from .models import Appointment
 from .serializers import AppointmentSerializer
@@ -28,14 +27,21 @@ class AppointmentCreation(generics.CreateAPIView):
     serializer_class = AppointmentSerializer
 
     def perform_create(self, serializer):
-        serializer.save()
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'success': True})
+        else:
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class AppointmentList(generics.ListAPIView):
     """
     View to see all appointments.
     Needs autentication.
-    Only allows POST action.
+    Only allows get action.
     Search option by "cip_code" available.
     """
     serializer_class = AppointmentSerializer
